@@ -1,5 +1,5 @@
 .env
 node_modules
 rbacdoc.js
-d.js
-app.js
+d
+app
