@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server",
     "start": "node server",
-    "test": "jest --watch"
+    "testing": "jest --watch",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
