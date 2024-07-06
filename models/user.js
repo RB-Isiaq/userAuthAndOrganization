@@ -32,12 +32,12 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
   // User.associate = (models) => {
-  //   User.hasMany(models.Organization, { foreignKey: 'userId', as: 'organizations' });
+  //   User.hasMany(models.Organisation, { foreignKey: 'userId', as: 'organisations' });
   // };
   User.associate = (models) => {
-    User.hasMany(models.Organization, {
+    User.hasMany(models.Organisation, {
       foreignKey: "userId",
-      as: "organizations",
+      as: "organisations",
     });
   };
   User.beforeCreate(async (user) => {

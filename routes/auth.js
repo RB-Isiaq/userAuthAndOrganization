@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { register, login } = require("../controllers/user");
+const { register, login } = require("../controllers/auth");
+const {
+  registerValidation,
+  loginValidation,
+} = require("../validators/auth.validator");
 
-router.post("/register", register);
-router.post("/login", login);
-router.get("/", (req, res) => {
-  console.log("Hello World!");
-
-  res.send("Welcome home");
-});
+router.post("/register", registerValidation, register);
+router.post("/login", loginValidation, login);
 
 module.exports = router;

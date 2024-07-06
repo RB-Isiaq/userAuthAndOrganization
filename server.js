@@ -5,7 +5,8 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const sequelize = require("./config/db");
 const authRoutes = require("./routes/auth");
-const organizationRoutes = require("./routes/organization");
+const organisationRoutes = require("./routes/organisation");
+const userRoutes = require("./routes/user");
 
 const app = express();
 
@@ -15,9 +16,11 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/auth", authRoutes);
-app.use("/api/organizations", organizationRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/organisations", organisationRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT =
+  process.env.NODE_ENV === "testing" ? 8080 : process.env.PORT || 5000;
 
 sequelize
   .sync()

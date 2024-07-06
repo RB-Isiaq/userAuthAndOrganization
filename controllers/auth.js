@@ -1,26 +1,42 @@
-const { validationResult } = require("express-validator");
 const db = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { Op } = require("sequelize");
+const { validationResult } = require("express-validator");
+const { generateToken } = require("../utils");
 
 const register = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
+    return res.status(400).json({
+      status: "Bad request",
+      message: "Registration unsuccessful",
+      errors: errors.array(),
+    });
   }
-
   const { firstName, lastName, email, password, phone } = req.body;
+  console.log(req.body, "req");
 
   try {
-    const userExists = await db.User.findOne({ where: { email } });
+    const userExists = await db.User.findOne({
+      where: {
+        [Op.or]: [{ email }],
+      },
+    });
+
     if (userExists) {
-      return res.status(422).json({
-        errors: [{ field: "email", message: "Email already in use" }],
-      });
+      const errors = [];
+      if (userExists.email === email) {
+        errors.push({ field: "email", message: "Email already in use" });
+      }
+      if (userExists.phone === phone) {
+        errors.push({ field: "phone", message: "Phone number already in use" });
+      }
+
+      return res.status(422).json({ errors });
     }
 
     const user = await db.User.create({
-      //   userId: email,
       firstName,
       lastName,
       email,
@@ -28,17 +44,13 @@ const register = async (req, res) => {
       phone,
     });
 
-    const orgName = `${firstName}'s Organization`;
-    const organization = await db.Organization.create({
-      orgId: user.userId,
+    const orgName = `${firstName}'s Organisation`;
+    const organisation = await db.Organisation.create({
+      orgId: user.dataValues.userId,
       name: orgName,
     });
-
-    await user.addOrganization(organization);
-
-    const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const r = await user.addOrganisation(organisation);
+    const token = generateToken(user.toJSON());
 
     res.status(201).json({
       status: "success",
@@ -66,9 +78,12 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
+    return res.status(400).json({
+      status: "Bad request",
+      message: "Login unsuccessful",
+      errors: errors.array(),
+    });
   }
-
   const { email, password } = req.body;
 
   try {
@@ -90,9 +105,7 @@ const login = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = generateToken(user.toJSON());
 
     res.status(200).json({
       status: "success",

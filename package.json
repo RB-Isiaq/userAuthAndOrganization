@@ -1,12 +1,12 @@
 {
-  "name": "user-auth-and-organization",
+  "name": "user-auth-and-organisation",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server",
     "start": "node server",
-    "test": "jest"
+    "test": "jest --watch"
   },
   "keywords": [],
   "author": "",
