@@ -18,7 +18,6 @@ const getUser = async (req, res) => {
         through: { attributes: [] },
       },
     });
-    console.log(loggedInUser, "loggedInUser fetch");
 
     const organisationIds = loggedInUser.Organisations.map((org) => org.orgId);
 
@@ -67,6 +66,72 @@ const getUser = async (req, res) => {
     });
   }
 };
+const getAllUsersInTheOrganisation = async (req, res) => {
+  const { userId } = req.user;
+  if (!userId) {
+    return res.status(400).json({
+      status: "Bad Request",
+      message: "User ID is required",
+      statusCode: 400,
+    });
+  }
+  try {
+    const loggedInUser = await db.User.findByPk(userId, {
+      include: {
+        model: db.Organisation,
+        attributes: ["orgId"],
+        through: { attributes: [] },
+      },
+    });
+    const loggedInUserOrganisation = loggedInUser;
+    console.log("logged in", loggedInUserOrganisation);
+
+    const allUsers = await db.User.findAll({
+      include: {
+        model: db.Organisation,
+        attributes: ["name"],
+        through: { attributes: [] },
+      },
+    });
+
+    const users = allUsers.map((user) =>
+      user.Organisations.filter((org) => org.orgId === loggedInUserOrganisation)
+    );
+
+    console.log("users", users);
+
+    console.log(allUsers, "allUsers");
+
+    // const organisationIds = loggedInUser.Organisations.map((org) => org.orgId);
+
+    // const userOrganisationIds = loggedInUser.Organisations.map(
+    //   (org) => org.orgId
+    // );
+    // const isSameOrganisation = userOrganisationIds.some((orgId) =>
+    //   organisationIds.includes(orgId)
+    // );
+    // if (!isSameOrganisation) {
+    //   return res.status(403).json({
+    //     status: "Forbidden",
+    //     message: "You are not authorized to access this user.",
+    //     statusCode: 403,
+    //   });
+    // }
+    // const { Organisations, ...rest } = user.toJSON();
+
+    res.status(200).json({
+      status: "success",
+      message: "Users fetched successfully",
+      data: loggedInUser.toJSON(),
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "Bad Request",
+      message: "Client error",
+      statusCode: 400,
+    });
+  }
+};
 
 const deleteUser = async (req, res) => {
   const { id } = req.params;
@@ -105,4 +170,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUser, deleteUser };
+module.exports = { getUser, getAllUsersInTheOrganisation, deleteUser };
