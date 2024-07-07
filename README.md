@@ -151,9 +151,11 @@ All error responses will have the following structure:
 
 ## Unit Tests
 
+`npm run test`
+
 1. **Token Generation**: Ensure token expires at the correct time and correct user details are found in the token.
-2. **Organisation Access**: Ensure users can't see data from organizations they don't have access to.
-3. **User Registration**: Test successful user registration, validation errors, and database constraints.
-4. **User Login**: Test successful login and failure on invalid credentials.
+2. **User Registration**: Test successful user registration, validation errors, and database constraints.
+3. **User Login**: Test successful login and failure on invalid credentials.
+4. **Organisation Access**: Ensure users can't see data from organizations they don't have access to.
 
 ---

@@ -1,5 +1,4 @@
 const db = require("../models");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
 const { validationResult } = require("express-validator");
@@ -48,7 +47,7 @@ const register = async (req, res) => {
       orgId: user.dataValues.userId,
       name: orgName,
     });
-    const r = await user.addOrganisation(organisation);
+    await user.addOrganisation(organisation);
     const token = generateToken(user.toJSON());
 
     res.status(201).json({

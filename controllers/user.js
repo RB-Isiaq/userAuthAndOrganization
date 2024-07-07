@@ -66,6 +66,7 @@ const getUser = async (req, res) => {
     });
   }
 };
+
 const getAllUsersInTheOrganisation = async (req, res) => {
   const { userId } = req.user;
   if (!userId) {
@@ -76,7 +77,6 @@ const getAllUsersInTheOrganisation = async (req, res) => {
     });
   }
   try {
-    // Fetch the logged-in user with their organizations
     const loggedInUser = await db.User.findByPk(userId, {
       include: {
         model: db.Organisation,
@@ -93,11 +93,9 @@ const getAllUsersInTheOrganisation = async (req, res) => {
       });
     }
 
-    // Get the organization IDs the logged-in user belongs to
     const organisationIds = loggedInUser.Organisations.map((org) => org.orgId);
 
-    // Fetch all users that belong to the same organizations
-    const allUsers = await db.User.findAll({
+    const allUsersInTheSameOrg = await db.User.findAll({
       include: {
         model: db.Organisation,
         attributes: ["orgId", "name"],
@@ -114,7 +112,7 @@ const getAllUsersInTheOrganisation = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: "Users fetched successfully",
-      data: allUsers,
+      data: allUsersInTheSameOrg,
     });
   } catch (error) {
     res.status(400).json({
