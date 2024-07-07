@@ -15,7 +15,6 @@ const register = async (req, res) => {
     });
   }
   const { firstName, lastName, email, password, phone } = req.body;
-  console.log(req.body, "req");
 
   try {
     const userExists = await db.User.findOne({

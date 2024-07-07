@@ -98,8 +98,6 @@ const createOrganisation = async (req, res) => {
       name,
       description,
     });
-    console.log("organisation", organisation);
-
     const user = await db.User.findByPk(userId);
     await user.addOrganisation(organisation);
 

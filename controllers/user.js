@@ -76,6 +76,7 @@ const getAllUsersInTheOrganisation = async (req, res) => {
     });
   }
   try {
+    // Fetch the logged-in user with their organizations
     const loggedInUser = await db.User.findByPk(userId, {
       include: {
         model: db.Organisation,
@@ -83,46 +84,37 @@ const getAllUsersInTheOrganisation = async (req, res) => {
         through: { attributes: [] },
       },
     });
-    const loggedInUserOrganisation = loggedInUser;
-    console.log("logged in", loggedInUserOrganisation);
 
+    if (!loggedInUser) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "Logged in user not found",
+        statusCode: 404,
+      });
+    }
+
+    // Get the organization IDs the logged-in user belongs to
+    const organisationIds = loggedInUser.Organisations.map((org) => org.orgId);
+
+    // Fetch all users that belong to the same organizations
     const allUsers = await db.User.findAll({
       include: {
         model: db.Organisation,
-        attributes: ["name"],
+        attributes: ["orgId", "name"],
         through: { attributes: [] },
+        where: {
+          orgId: organisationIds,
+        },
+      },
+      attributes: {
+        exclude: ["password", "createdAt", "updatedAt"],
       },
     });
-
-    const users = allUsers.map((user) =>
-      user.Organisations.filter((org) => org.orgId === loggedInUserOrganisation)
-    );
-
-    console.log("users", users);
-
-    console.log(allUsers, "allUsers");
-
-    // const organisationIds = loggedInUser.Organisations.map((org) => org.orgId);
-
-    // const userOrganisationIds = loggedInUser.Organisations.map(
-    //   (org) => org.orgId
-    // );
-    // const isSameOrganisation = userOrganisationIds.some((orgId) =>
-    //   organisationIds.includes(orgId)
-    // );
-    // if (!isSameOrganisation) {
-    //   return res.status(403).json({
-    //     status: "Forbidden",
-    //     message: "You are not authorized to access this user.",
-    //     statusCode: 403,
-    //   });
-    // }
-    // const { Organisations, ...rest } = user.toJSON();
 
     res.status(200).json({
       status: "success",
       message: "Users fetched successfully",
-      data: loggedInUser.toJSON(),
+      data: allUsers,
     });
   } catch (error) {
     res.status(400).json({
@@ -146,7 +138,6 @@ const deleteUser = async (req, res) => {
     const user = await db.User.findByPk(id, {
       attributes: { exclude: ["password", "createdAt", "updatedAt"] },
     });
-    console.log(user, "user fetch");
 
     if (!user) {
       return res.status(404).json({

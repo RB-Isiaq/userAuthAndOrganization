@@ -8,6 +8,10 @@ beforeEach(async () => {
   await db.sequelize.sync({ force: true });
 });
 
+afterAll(async () => {
+  await db.sequelize.close();
+});
+
 describe("Token Generation", () => {
   it("should generate a token with correct user details and expiration time", () => {
     const user = {
