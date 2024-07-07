@@ -8,6 +8,5 @@ const {
 
 router.post("/register", registerValidation, register);
 router.post("/login", loginValidation, login);
-router.get("/", (_, res) => res.send("hello world"));
 
 module.exports = router;

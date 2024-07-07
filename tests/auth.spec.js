@@ -56,8 +56,8 @@ describe("Auth API", () => {
       email: "",
       password: "",
     });
-    expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toEqual("Registration unsuccessful");
+    expect(res.statusCode).toEqual(422);
+    expect(res.body.message).toEqual("Validation error");
   });
 
   it("should fail if there’s duplicate email", async () => {

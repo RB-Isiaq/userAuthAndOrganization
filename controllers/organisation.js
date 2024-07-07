@@ -34,12 +34,14 @@ const getOrganisationById = async (req, res) => {
         statusCode: 403,
       });
     }
-
+    const org = organisation.toJSON();
     res.status(200).json({
       status: "success",
       message: "Organisation retrieved successfully",
       data: {
-        organisation,
+        orgId: org.orgId,
+        name: org.name,
+        description: org?.description,
       },
     });
   } catch (error) {

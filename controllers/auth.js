@@ -7,10 +7,16 @@ const { generateToken } = require("../utils");
 const register = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({
+    const errs = [];
+    errors
+      .array()
+      .forEach((err) => errs.push({ field: err.path, message: err.msg }));
+
+    return res.status(422).json({
       status: "Bad request",
-      message: "Registration unsuccessful",
-      errors: errors.array(),
+      message: "Validation error",
+      errors: errs,
+      statusCode: 422,
     });
   }
   const { firstName, lastName, email, password, phone } = req.body;
@@ -76,10 +82,16 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({
+    const errs = [];
+    errors
+      .array()
+      .forEach((err) => errs.push({ field: err.path, message: err.msg }));
+
+    return res.status(422).json({
       status: "Bad request",
-      message: "Login unsuccessful",
-      errors: errors.array(),
+      message: "Validation error",
+      errors: errs,
+      statusCode: 422,
     });
   }
   const { email, password } = req.body;
