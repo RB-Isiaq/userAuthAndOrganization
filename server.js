@@ -21,7 +21,8 @@ app.use("/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/organisations", organisationRoutes);
 
-const PORT = process.env.PORT || 5000;
+const isTestEnv = process.env.NODE_ENV === "test";
+const PORT = isTestEnv ? 9000 : process.env.PORT || 5000;
 
 sequelize
   .sync()
