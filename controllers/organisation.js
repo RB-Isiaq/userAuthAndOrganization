@@ -94,6 +94,19 @@ const getUserOrganisations = async (req, res) => {
 const createOrganisation = async (req, res) => {
   const { name, description } = req.body;
   const { userId } = req.user;
+  if (!name) {
+    return res.status(422).json({
+      status: "Bad request",
+      message: "Validation error",
+      errors: [
+        {
+          field: "name",
+          message: "Organisation name must be provided",
+        },
+      ],
+      statusCode: 422,
+    });
+  }
 
   try {
     const organisation = await db.Organisation.create({
