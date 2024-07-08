@@ -2,10 +2,10 @@
   "name": "user-auth-and-organisation",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon server",
-    "start": "node server",
+    "dev": "nodemon index",
+    "start": "node index",
     "test": "jest --runInBand --detectOpenHandles --forceExit"
   },
   "keywords": [],
