@@ -35,6 +35,8 @@ const options = isTestEnv
       database: process.env.DB_NAME || "",
     };
 
-const sequelize = new Sequelize(options);
+const sequelize = process.env.DEV_ENV
+  ? new Sequelize(options)
+  : new Sequelize(process.env.EXTERNAL_DATABASE_URL, options);
 
 module.exports = sequelize;

@@ -24,7 +24,7 @@ const register = async (req, res) => {
   try {
     const userExists = await db.User.findOne({
       where: {
-        [Op.or]: [{ email }],
+        [Op.or]: [{ email }, { phone }],
       },
     });
 
