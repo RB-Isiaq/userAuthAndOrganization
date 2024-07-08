@@ -24,7 +24,7 @@ const register = async (req, res) => {
   try {
     const userExists = await db.User.findOne({
       where: {
-        [Op.or]: [{ email }, { phone }],
+        [Op.or]: [{ email }],
       },
     });
 
@@ -71,7 +71,6 @@ const register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error.message);
     res.status(400).json({
       status: "Bad request",
       message: "Registration unsuccessful",
