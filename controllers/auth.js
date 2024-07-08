@@ -71,6 +71,7 @@ const register = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error.message);
     res.status(400).json({
       status: "Bad request",
       message: "Registration unsuccessful",
