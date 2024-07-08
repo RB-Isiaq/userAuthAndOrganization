@@ -1,5 +1,6 @@
-const { Sequelize } = require("sequelize");
 require("dotenv").config();
+const pg = require("pg");
+const { Sequelize } = require("sequelize");
 
 const isTestEnv = process.env.NODE_ENV === "test";
 
@@ -16,9 +17,11 @@ const options = isTestEnv
       password: process.env.LOCAL_DB_PASSWORD,
       host: "localhost",
       dialect: "postgres",
+      dialectModule: pg,
     }
   : {
       dialect: "postgres",
+      dialectModule: pg,
       dialectOptions: {
         ssl: {
           require: true,
