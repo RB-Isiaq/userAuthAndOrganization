@@ -26,7 +26,7 @@ const register = async (req, res) => {
       where: {
         [Op.or]: [
           { email },
-          // { phone: phone ? phone : Number.MAX_SAFE_INTEGER.toString() },
+          { phone: phone ? phone : Number.MAX_SAFE_INTEGER.toString() },
         ],
       },
     });
@@ -35,9 +35,9 @@ const register = async (req, res) => {
       if (userExists.email === email) {
         errors.push({ field: "email", message: "Email already in use" });
       }
-      // if (userExists?.phone === phone) {
-      //   errors.push({ field: "phone", message: "Phone number already in use" });
-      // }
+      if (userExists?.phone === phone) {
+        errors.push({ field: "phone", message: "Phone number already in use" });
+      }
 
       return res.status(422).json({ errors });
     }
