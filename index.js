@@ -18,6 +18,7 @@ app.use(cors());
 
 app.use("/", indexRoutes);
 app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/organisations", organisationRoutes);
 
