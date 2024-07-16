@@ -16,7 +16,7 @@ const register = async (req, res) => {
       status: "Bad request",
       message: "Validation error",
       errors: errs,
-      statusCode: ,
+      statusCode: 422,
     });
   }
   const { firstName, lastName, email, password, phone } = req.body;
